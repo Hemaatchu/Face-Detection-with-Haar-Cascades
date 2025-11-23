@@ -53,4 +53,76 @@ iv) Perform face detection with label in real-time video from webcam.
 - Step 3: Apply `detect_face()` function on each frame  
 - Step 4: Display the video frame with rectangles around detected faces  
 - Step 5: Exit loop and close windows when ESC key (key code 27) is pressed  
-- Step 6: Release video capture and destroy all OpenCV windows  
+- Step 6: Release video capture and destroy all OpenCV windows
+
+ ### Program
+
+ ```
+import cv2
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+withglass = cv2.imread('images (3).jpg', 0)
+group = cv2.imread('img_1.jpg', 0)
+
+plt.imshow(withglass, cmap='gray')
+plt.title("With Glasses")
+plt.show()
+
+plt.imshow(group, cmap='gray')
+plt.title("Group Image")
+plt.show()
+
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
+
+if face_cascade.empty():
+    raise IOError("Error loading face cascade XML file")
+if eye_cascade.empty():
+    raise IOError("Error loading eye cascade XML file")
+
+def detect_face(img, scaleFactor=1.1, minNeighbors=5):
+    face_img = img.copy()
+    face_rects = face_cascade.detectMultiScale(face_img, scaleFactor=scaleFactor, minNeighbors=minNeighbors)
+    for (x, y, w, h) in face_rects:
+        cv2.rectangle(face_img, (x, y), (x + w, y + h), (255, 255, 255), 2)
+    return face_img
+
+def detect_eyes(img):
+    face_img = img.copy()
+    eyes = eye_cascade.detectMultiScale(face_img)
+    for (x, y, w, h) in eyes:
+        cv2.rectangle(face_img, (x, y), (x + w, y + h), (255, 255, 255), 2)
+    return face_img
+
+result_withglass_faces = detect_face(withglass)
+plt.imshow(result_withglass_faces, cmap='gray')
+plt.title("Faces in With Glasses Image")
+plt.show()
+
+result_group_faces = detect_face(group)
+plt.imshow(result_group_faces, cmap='gray')
+plt.title("Faces in Group Image")
+plt.show()
+
+result_withglass_eyes = detect_eyes(withglass)
+plt.imshow(result_withglass_eyes, cmap='gray')
+plt.title("Eyes in With Glasses Image")
+plt.show()
+
+result_group_eyes = detect_eyes(group)
+plt.imshow(result_group_eyes, cmap='gray')
+plt.title("Eyes in Group Image")
+plt.show()
+```
+
+### Output
+
+<img width="893" height="814" alt="image" src="https://github.com/user-attachments/assets/2ab94ea3-c58a-4fda-992c-f2d215c4c0ea" />
+
+<img width="901" height="802" alt="image" src="https://github.com/user-attachments/assets/c80dd406-b14b-4382-9d29-eb7502e3b83f" />
+
+<img width="874" height="796" alt="image" src="https://github.com/user-attachments/assets/011d32af-3103-4d15-a82b-f4a167a58d2c" />
+
+### Result
+Thus the program to implement Face Detection using Haar Cascades was executed successfully.
